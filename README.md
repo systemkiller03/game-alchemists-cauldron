@@ -30,12 +30,12 @@ Ingredients are limited. Each one starts with a random stock from 2 to 15, and e
 
 The task is split into levels, and each finished level adds to the total score (393 at most).
 
-| Level | What it adds | Total score |
-| ----- | ------------ | :---------: |
-| Precondition | Repository setup, tooling, folder structure, quality checks | 58 |
-| Level 1 | One full playable game with fixed (Medium) rules | 228 |
-| Level 2 | Difficulty selection, save and continue | 278 |
-| Level 3 | Drag and drop, tooltips, reactions, Pour Out, keyboard shortcuts, visual feedback | 393 |
+| Level        | What it adds                                                                      | Total score |
+| ------------ | --------------------------------------------------------------------------------- | :---------: |
+| Precondition | Repository setup, tooling, folder structure, quality checks                       |     58      |
+| Level 1      | One full playable game with fixed (Medium) rules                                  |     228     |
+| Level 2      | Difficulty selection, save and continue                                           |     278     |
+| Level 3      | Drag and drop, tooltips, reactions, Pour Out, keyboard shortcuts, visual feedback |     393     |
 
 <!-- TODO: add which levels you actually finished -->
 
