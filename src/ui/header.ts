@@ -5,6 +5,10 @@ export function renderHeader(state: IGameState): void {
   if (!container) return;
 
   const isMenu = state.status === "menu";
+  const minutes = Math.floor(state.timeLeft / 60)
+    .toString()
+    .padStart(2, "0");
+  const seconds = (state.timeLeft % 60).toString().padStart(2, "0");
   const hearts = "❤️ ".repeat(Math.max(0, state.lives)).trim();
   const livesMarkup = !isMenu
     ? `<span class="stat-value stat-lives">${hearts || "None"}</span>`
@@ -17,7 +21,7 @@ export function renderHeader(state: IGameState): void {
     </div>
     <div class="stat-card" id="stat-time">
       <span class="stat-label">Time</span>
-      <span class="stat-value">${state.timeLeft}s</span>
+      <span class="stat-value">${minutes}:${seconds}</span>
     </div>
     <div class="stat-card" id="stat-lives-card">
       <span class="stat-label">Lives</span>

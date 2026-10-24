@@ -665,3 +665,691 @@ h1 {
   color: #94a3b8;
   font-weight: 600;
 }
+
+/* Fantasy workshop layout */
+body {
+  background:
+    radial-gradient(
+      ellipse at 50% 38%,
+      rgba(47, 88, 26, 0.28),
+      transparent 39%
+    ),
+    radial-gradient(
+      ellipse at 50% 100%,
+      rgba(104, 65, 22, 0.2),
+      transparent 45%
+    ),
+    linear-gradient(180deg, #090b0d 0%, #11120f 52%, #080909 100%);
+  padding: 12px clamp(12px, 2.2vw, 32px) 18px;
+  color: #f7edcf;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.app-header {
+  width: min(100%, 1480px);
+  max-width: none;
+  margin: 0 auto 12px;
+  gap: 8px;
+}
+
+h1 {
+  order: 1;
+  margin: 0;
+  padding: 4px 32px 8px;
+  color: #e9d18a;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+  line-height: 1.05;
+  text-shadow:
+    0 2px 2px #080806,
+    0 0 12px rgba(128, 183, 51, 0.62);
+}
+
+.header-stats {
+  order: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+  max-width: none;
+}
+
+.stat-card {
+  min-width: 0;
+  min-height: 58px;
+  padding: 6px 14px;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid #745a32;
+  border-radius: 8px;
+  background: linear-gradient(
+    180deg,
+    rgba(25, 23, 18, 0.96),
+    rgba(9, 10, 10, 0.96)
+  );
+  box-shadow:
+    inset 0 0 0 2px rgba(209, 166, 83, 0.12),
+    0 5px 18px #000;
+}
+
+.stat-label {
+  margin: 0;
+  color: #c69d4e;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(0.72rem, 1.5vw, 0.95rem);
+  font-variant: small-caps;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.stat-value {
+  color: #a9eb4d;
+  font-size: clamp(1rem, 2.3vw, 1.45rem);
+  text-shadow: 0 0 10px rgba(129, 207, 49, 0.55);
+}
+
+.stat-lives {
+  color: #f47743;
+  font-size: clamp(0.8rem, 1.9vw, 1.2rem);
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 8px rgba(255, 73, 34, 0.48);
+  white-space: nowrap;
+}
+
+.game-container {
+  width: min(100%, 1480px);
+  max-width: none;
+  display: grid;
+  grid-template-columns: minmax(260px, 1.05fr) minmax(340px, 1.25fr) minmax(
+      250px,
+      0.9fr
+    );
+  grid-template-areas:
+    "shelf station recipe"
+    "bars bars bars";
+  grid-template-rows: minmax(430px, 1fr) auto;
+  align-items: stretch;
+  gap: 14px;
+}
+
+.shelf {
+  grid-area: shelf;
+  align-self: stretch;
+  min-width: 0;
+  max-width: none;
+  min-height: 430px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+  padding: clamp(68px, 7vw, 92px) clamp(34px, 4vw, 58px) 38px;
+  background: url("../assets/shelf.png") center / 120% 100% no-repeat;
+  scrollbar-color: #856735 rgba(20, 15, 9, 0.55);
+  scrollbar-width: thin;
+}
+
+.shelf button {
+  min-height: 62px;
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  column-gap: 7px;
+  row-gap: 2px;
+  align-items: center;
+  padding: 7px 9px;
+  border: 1px solid rgba(187, 140, 69, 0.42);
+  border-radius: 5px;
+  background: rgba(28, 17, 10, 0.8);
+  color: #f5e6bf;
+  text-align: left;
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.65);
+}
+
+.shelf button:hover:not(:disabled) {
+  border-color: #d2ab5a;
+  background: rgba(72, 49, 21, 0.94);
+  box-shadow: 0 0 13px rgba(194, 149, 55, 0.28);
+  transform: translateY(-1px);
+}
+
+.shelf button:disabled {
+  opacity: 0.58;
+}
+
+.shelf button .icon {
+  grid-column: 1;
+  grid-row: 1 / 3;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 46px;
+  margin: 0;
+}
+
+.shelf button .name {
+  grid-column: 2;
+  grid-row: 1;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  justify-content: flex-start;
+  font-size: clamp(0.78rem, 1.1vw, 0.92rem);
+  line-height: 1.1;
+}
+
+.shelf button .stats {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 4px;
+  margin: 0;
+  color: #f0cf7d;
+  font-size: clamp(0.72rem, 0.9vw, 0.82rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-shadow: 0 1px #170d04;
+}
+
+.shelf button .stats span {
+  padding: 2px 3px;
+  border-radius: 3px;
+  background: rgba(14, 12, 8, 0.72);
+}
+
+.shelf button .stat-temperature {
+  color: #ff9c70;
+}
+
+.shelf button .stat-density {
+  color: #80c8ff;
+}
+
+.shelf button .stat-magic {
+  color: #d49bff;
+}
+
+.shelf button .badge {
+  grid-column: 3;
+  grid-row: 1 / 3;
+  flex: 0 0 auto;
+  min-width: 26px;
+  padding: 4px 6px;
+  border: 1px solid #7c9e29;
+  border-radius: 50%;
+  background: #171d0a;
+  color: #c9ed62;
+  font-size: 0.82rem;
+}
+
+.brewing-station {
+  grid-area: station;
+  min-width: 0;
+  min-height: 430px;
+  display: block;
+  padding: 4px 0 10px;
+  position: relative;
+  isolation: isolate;
+}
+
+.brewing-station::before {
+  position: absolute;
+  z-index: -1;
+  inset: 4% 0 0;
+  background:
+    radial-gradient(
+      ellipse at 50% 75%,
+      rgba(108, 170, 29, 0.22),
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse at 50% 100%,
+      rgba(63, 52, 27, 0.25),
+      transparent 50%
+    );
+  content: "";
+}
+
+.cauldron-area {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+}
+
+.cauldron-art {
+  position: absolute;
+  bottom: 0;
+  width: min(100%, 540px);
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 16px rgba(115, 177, 40, 0.3));
+  pointer-events: none;
+}
+
+.cauldron {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 20%;
+  width: min(76%, 390px);
+  min-height: 52px;
+  flex-wrap: nowrap;
+  gap: clamp(4px, 1.2vw, 12px);
+  transform: translateX(-50%);
+}
+
+.cauldron-slot {
+  flex: 1 1 0;
+  width: auto;
+  height: clamp(38px, 5vw, 58px);
+  padding: 4px;
+  border: 1px dashed rgba(185, 216, 82, 0.72);
+  border-radius: 50%;
+  background: rgba(31, 58, 9, 0.72);
+  box-shadow: 0 0 12px rgba(128, 198, 36, 0.35);
+}
+
+.cauldron-slot--filled {
+  border: 1px solid #d5ef71;
+  background: rgba(104, 159, 24, 0.58);
+  box-shadow: 0 0 16px rgba(158, 237, 52, 0.75);
+}
+
+.cauldron-counter {
+  display: none;
+}
+
+.recipe-panel {
+  grid-area: recipe;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  min-height: 430px;
+  background: url("../assets/book.png") center / auto 100% no-repeat;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.55));
+}
+
+.recipe-panel__card {
+  height: 100%;
+  gap: clamp(14px, 2.2vh, 24px);
+  justify-content: flex-start;
+  padding: 42px clamp(46px, 4.8vw, 72px) 54px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #33210e;
+}
+
+.recipe-panel__header {
+  gap: 5px;
+}
+
+.recipe-panel__subtitle {
+  color: #42270d;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  font-variant: small-caps;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-shadow: 0 1px rgba(255, 241, 207, 0.55);
+}
+
+.recipe-panel__title {
+  color: #26160c;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.45rem, 2.5vw, 2.15rem);
+  font-variant: small-caps;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+  text-shadow: none;
+}
+
+.recipe-panel__targets {
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recipe-target {
+  width: 100%;
+  min-width: 0;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 16px;
+  border: 0;
+  border-bottom: 1px solid rgba(105, 72, 32, 0.42);
+  border-radius: 0;
+  background: transparent;
+}
+
+.recipe-target__label {
+  margin: 0;
+  color: #3f280f;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(0.95rem, 1.35vw, 1.2rem);
+  font-variant: small-caps;
+  font-weight: 700;
+}
+
+.recipe-target__range {
+  color: #46210f;
+  font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.recipe-target[data-param="temperature"] .recipe-target__range {
+  color: #8f2e16;
+}
+
+.recipe-target[data-param="density"] .recipe-target__range {
+  color: #174c83;
+}
+
+.recipe-target[data-param="magicPower"] .recipe-target__range {
+  color: #592675;
+}
+
+.recipe-counter,
+.cauldron-counter {
+  border-radius: 4px;
+}
+
+.recipe-counter {
+  padding: 8px 12px;
+  border-color: rgba(83, 48, 16, 0.7);
+  background: rgba(221, 187, 122, 0.48);
+  color: #38220d;
+  font-size: clamp(0.95rem, 1.3vw, 1.15rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.recipe-counter.counter--full,
+.recipe-counter.highlight {
+  border-color: #a57922;
+  background: rgba(233, 194, 74, 0.45);
+  color: #45310c;
+}
+
+.bars,
+.cauldron-bars {
+  grid-area: bars;
+  width: 100%;
+  max-width: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.cauldron-bar {
+  min-width: 0;
+  padding: 9px 12px;
+  border: 1px solid #755a32;
+  border-radius: 8px;
+  background: linear-gradient(
+    160deg,
+    rgba(23, 22, 17, 0.96),
+    rgba(9, 10, 10, 0.96)
+  );
+  box-shadow:
+    inset 0 0 0 2px rgba(202, 161, 80, 0.1),
+    0 4px 14px #000;
+}
+
+.cauldron-bar__header {
+  flex-wrap: wrap;
+  margin-bottom: 7px;
+  gap: 4px 8px;
+}
+
+.cauldron-bar__label {
+  color: #e3c675;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(0.9rem, 1.35vw, 1.08rem);
+  font-variant: small-caps;
+}
+
+.cauldron-bar__target-text {
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #bdad85;
+  font-size: 0.82rem;
+}
+
+.cauldron-bar__value {
+  min-width: 32px;
+  color: #d9d1b5;
+  font-size: 1.02rem;
+}
+
+.cauldron-bar__track {
+  height: 17px;
+  border-color: #78643a;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #492010, #aba342 50%, #284d23);
+}
+
+.cauldron-bar__target-zone {
+  border-color: rgba(198, 233, 72, 0.85);
+  border-style: solid;
+  background: rgba(160, 218, 43, 0.22);
+}
+
+.cauldron-bar__fill {
+  background: linear-gradient(90deg, #a75a1e, #d2b746);
+}
+
+.cauldron-bar__fill.in-range {
+  background: linear-gradient(90deg, #7eac22, #c2ee47);
+}
+
+.cauldron-bar__marker {
+  width: 7px;
+  border-color: #453719;
+  background: #efdd91;
+}
+
+.cauldron-bar__scale {
+  color: #ae9a6c;
+  font-size: 0.76rem;
+}
+
+.controls {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  width: min(100%, 390px);
+  min-height: 56px;
+  margin-inline: auto;
+}
+
+.btn-primary {
+  border: 1px solid #a4c934;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #395a0d, #172907);
+  color: #d8f47d;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.25rem, 2.4vw, 1.8rem);
+  font-variant: small-caps;
+  letter-spacing: 0.12em;
+  text-shadow: 0 0 10px rgba(163, 221, 57, 0.7);
+  box-shadow:
+    inset 0 0 0 2px rgba(181, 220, 80, 0.18),
+    0 0 22px rgba(131, 193, 37, 0.28);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #527d13, #243b08);
+  box-shadow:
+    inset 0 0 0 2px rgba(211, 238, 126, 0.24),
+    0 0 26px rgba(154, 217, 53, 0.52);
+  transform: translateY(-2px);
+}
+
+.btn-start,
+.btn-restart {
+  background: linear-gradient(180deg, #395a0d, #172907);
+  color: #d8f47d;
+}
+
+.btn-brew:disabled {
+  background: #252817;
+  color: #858c67;
+  border-color: #555b38;
+}
+
+.game-over-box {
+  border-color: #a24c34;
+  background: rgba(25, 12, 9, 0.96);
+}
+
+.game-over-title {
+  color: #ee7855;
+}
+
+.feedback-message {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.88rem;
+}
+
+@media (max-width: 980px) {
+  .game-container {
+    grid-template-columns: minmax(235px, 0.95fr) minmax(320px, 1.2fr);
+    grid-template-areas:
+      "shelf station"
+      "recipe recipe"
+      "bars bars";
+    grid-template-rows: minmax(400px, 1fr) auto auto;
+  }
+
+  .recipe-panel {
+    min-height: 300px;
+    background-size: auto 100%;
+  }
+
+  .recipe-panel__card {
+    max-width: none;
+    margin: 0;
+    padding: 38px clamp(92px, 12vw, 160px) 46px;
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 10px 10px 16px;
+  }
+
+  .app-header {
+    margin-bottom: 8px;
+  }
+
+  .header-stats {
+    gap: 5px;
+  }
+
+  .stat-card {
+    min-height: 48px;
+    flex-direction: column;
+    gap: 1px;
+    padding: 5px 3px;
+  }
+
+  .stat-label {
+    font-size: 0.65rem;
+  }
+
+  .stat-value {
+    font-size: 1rem;
+  }
+
+  .stat-lives {
+    font-size: 0.75rem;
+    letter-spacing: 0;
+  }
+
+  h1 {
+    padding: 3px 8px 5px;
+    font-size: clamp(1.45rem, 7vw, 2.1rem);
+  }
+
+  .game-container {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "station"
+      "shelf"
+      "recipe"
+      "bars";
+    grid-template-rows: 360px auto auto auto;
+    gap: 10px;
+  }
+
+  .brewing-station {
+    min-height: 360px;
+  }
+
+  .shelf {
+    min-height: 0;
+    max-height: 480px;
+    padding: 58px 8% 42px;
+    background-size: 100% 100%;
+  }
+
+  .shelf button {
+    min-height: 62px;
+  }
+
+  .shelf button .stats {
+    display: flex;
+    gap: 3px;
+    margin: 0;
+    font-size: 0.72rem;
+  }
+
+  .recipe-panel {
+    min-height: 330px;
+  }
+
+  .recipe-panel__card {
+    max-width: none;
+    padding: 44px clamp(62px, 16vw, 90px) 54px;
+  }
+
+  .bars,
+  .cauldron-bars {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 7px;
+  }
+
+  .cauldron-bar {
+    padding: 8px 11px;
+  }
+
+  .cauldron-bar__header {
+    flex-wrap: nowrap;
+  }
+
+  .cauldron-bar__label {
+    font-size: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

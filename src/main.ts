@@ -1,4 +1,5 @@
 import "./styles/style.css";
+import { renderAppShell } from "./ui/appShell";
 import { IGameState } from "./types/types";
 import { initialGameState } from "./state/gameState";
 import { renderHeader } from "./ui/header";
@@ -9,6 +10,8 @@ import { renderBars } from "./ui/bars";
 import { renderControls } from "./ui/controls";
 
 let state: IGameState = initialGameState;
+
+renderAppShell();
 
 function setState(newState: IGameState): void {
   state = newState;

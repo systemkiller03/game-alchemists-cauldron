@@ -26,7 +26,11 @@ export function renderShelf(
     button.innerHTML = `
       <img src="${ing.icon}" alt="${ing.name}" class="icon"/>
       <span class="name">${ing.name}</span>
-      <span class="stats">T:${ing.temperature} D:${ing.density} M:${ing.magicPower}</span>
+      <span class="stats" aria-label="Temperature ${ing.temperature}, density ${ing.density}, magic power ${ing.magicPower}">
+        <span class="stat-temperature" title="Temperature">T:${ing.temperature}</span>
+        <span class="stat-density" title="Density">D:${ing.density}</span>
+        <span class="stat-magic" title="Magic Power">M:${ing.magicPower}</span>
+      </span>
       <span class="badge">${stock}</span>
     `;
     button.onclick = (): void => {
