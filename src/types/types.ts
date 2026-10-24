@@ -34,6 +34,14 @@ export interface IGameState {
   shelfStock: Record<string, number>; // ingredient id -> portions left
   difficulty?: Difficulty; // Level 2+
   lastReactionId?: string | null; // Level 3+
+  gameOverReason?: string | null;
+}
+
+export interface ILeaderboardEntry {
+  name: string;
+  score: number;
+  date: string; // DD.MM.YYYY HH:MM
+  timestamp: number;
 }
 
 export interface IReaction {
