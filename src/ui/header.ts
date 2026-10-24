@@ -1,27 +1,62 @@
 import { IGameState } from "../types/types";
+import { formatTime } from "../logic/timer";
+import { DIFFICULTY_SETTINGS, DEFAULT_DIFFICULTY } from "../data/difficulty";
 
 export function renderHeader(state: IGameState): void {
   const container = document.getElementById("header-stats");
   if (!container) return;
 
   const isMenu = state.status === "menu";
-  const minutes = Math.floor(state.timeLeft / 60)
-    .toString()
-    .padStart(2, "0");
-  const seconds = (state.timeLeft % 60).toString().padStart(2, "0");
+  const difficulty = state.difficulty ?? DEFAULT_DIFFICULTY;
+  const maxTime = DIFFICULTY_SETTINGS[difficulty].maxTime;
+
+  const timePercent = isMenu
+    ? 0
+    : Math.max(0, Math.min(100, (state.timeLeft / maxTime) * 100));
+
+  const isWarning =
+    state.status === "playing" && state.timeLeft < 15 && state.timeLeft > 0;
+
+  const formattedTime = isMenu ? "00:00" : formatTime(state.timeLeft);
+
   const hearts = "❤️ ".repeat(Math.max(0, state.lives)).trim();
   const livesMarkup = !isMenu
-    ? `<span class="stat-value stat-lives">${hearts || "None"}</span>`
-    : `<span class="stat-value stat-lives">—</span>`;
+    ? `<span class="stat-value stat-lives" id="stat-lives-val">${hearts || "None"}</span>`
+    : `<span class="stat-value stat-lives" id="stat-lives-val">—</span>`;
+
+  const scoreValEl = document.getElementById("stat-score-val");
+  const timeValEl = document.getElementById("timer-display");
+  const timeBarFillEl = document.getElementById("timer-bar-fill");
+  const livesValEl = document.getElementById("stat-lives-val");
+  const statTimeCard = document.getElementById("stat-time");
+
+  if (scoreValEl && timeValEl && timeBarFillEl && livesValEl && statTimeCard) {
+    scoreValEl.textContent = String(state.score);
+    timeValEl.textContent = formattedTime;
+    timeBarFillEl.style.width = `${timePercent}%`;
+    timeBarFillEl.className = `timer-bar__fill ${isWarning ? "timer-bar__fill--warning" : ""}`;
+    statTimeCard.className = `stat-card stat-time ${isWarning ? "stat-time--warning" : ""}`;
+    livesValEl.innerHTML = !isMenu ? hearts || "None" : "—";
+    return;
+  }
 
   container.innerHTML = `
     <div class="stat-card" id="stat-score">
       <span class="stat-label">Score</span>
-      <span class="stat-value">${state.score}</span>
+      <span class="stat-value" id="stat-score-val">${state.score}</span>
     </div>
-    <div class="stat-card" id="stat-time">
-      <span class="stat-label">Time</span>
-      <span class="stat-value">${minutes}:${seconds}</span>
+    <div class="stat-card stat-time ${isWarning ? "stat-time--warning" : ""}" id="stat-time">
+      <div class="stat-time__info">
+        <span class="stat-label">Time</span>
+        <span class="stat-value" id="timer-display">${formattedTime}</span>
+      </div>
+      <div class="timer-bar" id="timer-bar" aria-label="Remaining time">
+        <div
+          class="timer-bar__fill ${isWarning ? "timer-bar__fill--warning" : ""}"
+          id="timer-bar-fill"
+          style="width: ${timePercent}%;"
+        ></div>
+      </div>
     </div>
     <div class="stat-card" id="stat-lives-card">
       <span class="stat-label">Lives</span>
