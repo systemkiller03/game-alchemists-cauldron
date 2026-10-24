@@ -1,6 +1,6 @@
 import { IGameState } from "../types/types";
 
-export function renderCauldron(state: IGameState) {
+export function renderCauldron(state: IGameState): void {
   const container = document.getElementById("cauldron");
   if (!container) return;
   container.innerHTML = "";

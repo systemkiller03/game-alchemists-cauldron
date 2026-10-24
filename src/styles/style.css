@@ -1,0 +1,329 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    sans-serif;
+  background-color: #0f0d17;
+  color: #f1f5f9;
+  min-height: 100vh;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+h1 {
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  text-align: center;
+  margin-bottom: 24px;
+  color: #a855f7;
+  text-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+  letter-spacing: 1px;
+}
+
+/* Shelf styling */
+.shelf {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  width: 100%;
+  max-width: 900px;
+  margin-bottom: 24px;
+}
+
+.shelf button {
+  background: #1b172a;
+  border: 1px solid #362f52;
+  border-radius: 10px;
+  padding: 10px 8px;
+  color: #e2e8f0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  transition:
+    transform 0.15s ease,
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.shelf button:hover:not(:disabled) {
+  border-color: #8b5cf6;
+  background: #241e38;
+  transform: translateY(-2px);
+}
+
+.shelf button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.shelf button .icon {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  margin-bottom: 6px;
+}
+
+.shelf button .name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.shelf button .stats {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.shelf button .badge {
+  background: #6366f1;
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.shelf button.out-of-stock .icon {
+  visibility: hidden;
+}
+
+/* Cauldron & Counter */
+.cauldron {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 500px;
+  min-height: 60px;
+  margin-bottom: 8px;
+}
+
+.cauldron-slot {
+  width: 54px;
+  height: 54px;
+  background: #191428;
+  border: 2px dashed #4b3f72;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.cauldron-slot .icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.cauldron-counter {
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  margin-bottom: 24px;
+}
+
+/* ========================================= */
+/* Cauldron Parameter Bars (US 1.2)           */
+/* ========================================= */
+
+.bars,
+.cauldron-bars {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cauldron-bar {
+  background: #181427;
+  border: 1px solid #332b50;
+  border-radius: 12px;
+  padding: 14px 18px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.cauldron-bar.in-range {
+  border-color: #22c55e;
+  box-shadow: 0 0 16px rgba(34, 197, 94, 0.25);
+}
+
+.cauldron-bar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 8px;
+}
+
+.cauldron-bar__label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #f8fafc;
+  letter-spacing: 0.5px;
+}
+
+.cauldron-bar__target-text {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.cauldron-bar__value {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  min-width: 48px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  transition: color 0.3s ease;
+}
+
+.cauldron-bar.in-range .cauldron-bar__value {
+  color: #4ade80;
+  text-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+}
+
+.cauldron-bar__track-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.cauldron-bar__track {
+  position: relative;
+  height: 20px;
+  background: #0c0915;
+  border: 1px solid #28213e;
+  border-radius: 10px;
+  overflow: visible;
+}
+
+/* Target Zone */
+.cauldron-bar__target-zone {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  background: rgba(234, 179, 8, 0.16);
+  border: 1px dashed rgba(234, 179, 8, 0.7);
+  border-radius: 6px;
+  z-index: 1;
+  pointer-events: none;
+  transition:
+    left 0.4s ease,
+    width 0.4s ease,
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.cauldron-bar__target-zone.in-range {
+  background-color: rgba(34, 197, 94, 0.35);
+  border: 1px solid #22c55e;
+  box-shadow:
+    0 0 14px #22c55e,
+    0 0 28px rgba(34, 197, 94, 0.55),
+    inset 0 0 10px rgba(34, 197, 94, 0.4);
+}
+
+/* Center Line for bars with negative values (0 marker) */
+.cauldron-bar__center-line {
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  background: #64748b;
+  transform: translateX(-50%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Fill bar indicating value from 0 */
+.cauldron-bar__fill {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  z-index: 1;
+  pointer-events: none;
+  transition:
+    left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+    width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+    background 0.3s ease;
+}
+
+.cauldron-bar__fill.in-range {
+  background: linear-gradient(90deg, #10b981, #22c55e);
+}
+
+/* Value Marker */
+.cauldron-bar__marker {
+  position: absolute;
+  top: -5px;
+  bottom: -5px;
+  width: 6px;
+  background: #ffffff;
+  border: 2px solid #0f172a;
+  border-radius: 3px;
+  transform: translateX(-50%);
+  z-index: 3;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+  transition:
+    left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.cauldron-bar__marker.in-range {
+  background-color: #22c55e;
+  border-color: #ffffff;
+  box-shadow:
+    0 0 12px #22c55e,
+    0 0 24px rgba(34, 197, 94, 0.9);
+}
+
+/* Scale Labels */
+.cauldron-bar__scale {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  font-size: 0.72rem;
+  color: #64748b;
+  margin-top: 5px;
+  user-select: none;
+}
+
+.cauldron-bar__scale .scale-zero {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #94a3b8;
+  font-weight: 600;
+}

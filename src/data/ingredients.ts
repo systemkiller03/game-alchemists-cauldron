@@ -5,6 +5,8 @@ import frostLotus from "@/assets/frost-lotus.svg";
 import mandrakeRoot from "@/assets/mandrake-root.svg";
 import causticAcid from "@/assets/caustic-acid.svg";
 import essenceOfTheVoid from "@/assets/essence-of-the-void.svg";
+import phoenixFeather from "@/assets/phoenix-feather.svg";
+import toadSlime from "@/assets/toad-slime.svg";
 
 export const INGREDIENTS: IIngredient[] = [
   {
@@ -54,5 +56,21 @@ export const INGREDIENTS: IIngredient[] = [
     temperature: -20,
     density: -10,
     magicPower: 40,
+  },
+  {
+    id: "phoenix-feather",
+    name: "Phoenix Feather",
+    icon: phoenixFeather,
+    temperature: 50,
+    density: -10,
+    magicPower: 30,
+  },
+  {
+    id: "toad-slime",
+    name: "Toad Slime",
+    icon: toadSlime,
+    temperature: 5,
+    density: 30,
+    magicPower: 0,
   },
 ];

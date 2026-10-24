@@ -1,9 +1,13 @@
 import { IGameState } from "../types/types";
 import { INGREDIENTS } from "../data/ingredients";
+export { calculateCauldron, type ICauldronValues } from "./calculateCauldron";
 
 export const MAX_CAULDRON_SIZE = 4;
 
-export function addIngredient(state: IGameState, ingredientId: string): IGameState {
+export function addIngredient(
+  state: IGameState,
+  ingredientId: string,
+): IGameState {
   if (state.cauldronIngredients.length >= MAX_CAULDRON_SIZE) return state;
   const stock = state.shelfStock[ingredientId] ?? 0;
   if (stock <= 0) return state;
