@@ -1,6 +1,7 @@
 import { IGameState } from "../types/types";
 import { brewPotion, startNewGame } from "../logic/cauldron";
 import { showFeedback } from "./feedback";
+import { openLeaderboardModal } from "./leaderboard";
 
 export function renderControls(
   state: IGameState,
@@ -22,6 +23,9 @@ export function renderControls(
   brewBtn.textContent = "Brew";
 
   if (state.status === "menu") {
+    const menuGroup = document.createElement("div");
+    menuGroup.className = "menu-controls-group";
+
     startBtn.style.display = "";
     brewBtn.style.display = "none";
     brewBtn.disabled = true;
@@ -31,29 +35,25 @@ export function renderControls(
       setState(next);
     };
 
-    container.appendChild(startBtn);
+    const leaderboardBtn = document.createElement("button");
+    leaderboardBtn.id = "btn-leaderboard-menu";
+    leaderboardBtn.className = "btn-secondary btn-leaderboard";
+    leaderboardBtn.textContent = "🏆 Leaderboard";
+    leaderboardBtn.onclick = (): void => {
+      openLeaderboardModal();
+    };
+
+    menuGroup.append(startBtn, leaderboardBtn);
+    container.appendChild(menuGroup);
     container.appendChild(brewBtn);
     return;
   }
 
   if (state.status === "game-over") {
-    const gameOverBox = document.createElement("div");
-    gameOverBox.className = "game-over-box";
-    gameOverBox.innerHTML = `
-      <p class="game-over-title">Game Over</p>
-      <p class="game-over-score">Final Score: ${state.score}</p>
-    `;
-
-    const restartBtn = document.createElement("button");
-    restartBtn.id = "btn-restart";
-    restartBtn.className = "btn-primary btn-restart";
-    restartBtn.textContent = "Play Again";
-    restartBtn.onclick = (): void => {
-      const next = startNewGame(state);
-      setState(next);
-    };
-    gameOverBox.appendChild(restartBtn);
-    container.appendChild(gameOverBox);
+    // Game over screen is displayed separately via renderGameOver modal
+    startBtn.style.display = "none";
+    brewBtn.style.display = "none";
+    brewBtn.disabled = true;
     return;
   }
 

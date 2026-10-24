@@ -21,7 +21,9 @@ export function renderShelf(
     const button = document.createElement("button");
     button.id = `shelf-${ing.id}`;
     button.disabled =
-      stock <= 0 || state.cauldronIngredients.length >= maxCauldronSize;
+      state.status !== "playing" ||
+      stock <= 0 ||
+      state.cauldronIngredients.length >= maxCauldronSize;
     if (stock <= 0) button.classList.add("out-of-stock");
     button.innerHTML = `
       <img src="${ing.icon}" alt="${ing.name}" class="icon"/>
