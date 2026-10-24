@@ -1,8 +1,7 @@
-// src/ui/shelf.ts
 import { IGameState } from "../types/types";
 import { INGREDIENTS } from "../data/ingredients";
 import { addIngredient } from "../logic/cauldron";
-import { MAX_CAULDRON_SIZE } from "../constants";
+import { DIFFICULTY_SETTINGS, DEFAULT_DIFFICULTY } from "../data/difficulty";
 
 export function renderShelf(
   state: IGameState,
@@ -11,14 +10,18 @@ export function renderShelf(
   const container = document.getElementById("shelf");
   if (!container) return;
   container.innerHTML = "";
-  const displayed = INGREDIENTS.slice(0, 6);
+
+  const difficulty = state.difficulty ?? DEFAULT_DIFFICULTY;
+  const settings = DIFFICULTY_SETTINGS[difficulty];
+  const maxCauldronSize = settings.maxCauldronIngredients;
+  const displayed = INGREDIENTS.slice(0, settings.ingredientsCount);
+
   displayed.forEach((ing) => {
     const stock = state.shelfStock[ing.id] ?? 0;
     const button = document.createElement("button");
     button.id = `shelf-${ing.id}`;
     button.disabled =
-      stock <= 0 || state.cauldronIngredients.length >= MAX_CAULDRON_SIZE;
-    // dim when out of stock
+      stock <= 0 || state.cauldronIngredients.length >= maxCauldronSize;
     if (stock <= 0) button.classList.add("out-of-stock");
     button.innerHTML = `
       <img src="${ing.icon}" alt="${ing.name}" class="icon"/>
