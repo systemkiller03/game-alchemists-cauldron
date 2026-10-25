@@ -15,6 +15,27 @@ export { checkBrew, type IBrewCheckResult } from "./brewCheck";
 export const MAX_CAULDRON_SIZE =
   DIFFICULTY_SETTINGS[DEFAULT_DIFFICULTY].maxCauldronIngredients;
 
+function clearCauldronIngredients(state: IGameState): IGameState {
+  return { ...state, cauldronIngredients: [] };
+}
+
+export function pourOut(state: IGameState): IGameState {
+  if (state.status !== "playing" || state.cauldronIngredients.length === 0) {
+    return state;
+  }
+
+  const timeLeft = Math.max(0, state.timeLeft - 10);
+  const isTimeUp = timeLeft === 0;
+  const clearedState = clearCauldronIngredients(state);
+
+  return {
+    ...clearedState,
+    timeLeft,
+    status: isTimeUp ? "game-over" : state.status,
+    gameOverReason: isTimeUp ? "Time is up!" : state.gameOverReason,
+  };
+}
+
 export function addIngredient(
   state: IGameState,
   ingredientId: string,
@@ -120,10 +141,9 @@ export function brewPotion(state: IGameState): IBrewResult {
 
     return {
       nextState: {
-        ...state,
+        ...clearCauldronIngredients(state),
         score: nextScore,
         timeLeft: nextTime,
-        cauldronIngredients: [],
         activeRecipe: nextRecipe,
         status: outOfIngredients ? "game-over" : state.status,
         gameOverReason: outOfIngredients ? "Out of ingredients" : null,
@@ -149,11 +169,10 @@ export function brewPotion(state: IGameState): IBrewResult {
 
   return {
     nextState: {
-      ...state,
+      ...clearCauldronIngredients(state),
       lives: nextLives,
       status: nextStatus,
       gameOverReason,
-      cauldronIngredients: [],
     },
     checkResult,
   };
