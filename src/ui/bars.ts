@@ -1,5 +1,6 @@
 import { IGameState, IRecipeRange } from "../types/types";
-import { calculateCauldron, ICauldronValues } from "../logic/calculateCauldron";
+import { ICauldronValues } from "../logic/calculateCauldron";
+import { calculateCauldronWithReactions } from "../logic/reactions";
 
 export interface IBarConfig {
   id: "temperature" | "density" | "magicPower";
@@ -167,8 +168,9 @@ export function renderBars(state: IGameState): void {
     document.getElementById("bars") || document.getElementById("cauldron-bars");
   if (!container) return;
 
-  const currentValues: ICauldronValues = calculateCauldron(
+  const currentValues: ICauldronValues = calculateCauldronWithReactions(
     state.cauldronIngredients,
+    state.difficulty,
   );
   const recipe = state.activeRecipe;
 

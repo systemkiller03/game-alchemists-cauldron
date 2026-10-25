@@ -13,6 +13,7 @@ import { renderGameOver } from "./ui/gameOver";
 import { GameTimer } from "./logic/timer";
 import { startNewGame } from "./logic/cauldron";
 import { clearSave, saveGame } from "./storage/gameSave";
+import { INGREDIENTS } from "./data/ingredients";
 
 let state: IGameState = initialGameState;
 
@@ -75,6 +76,52 @@ function render(): void {
   renderPauseDialog(state, setState);
   renderGameOver(state, handlePlayAgain);
 }
+
+function isTextEntryTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false;
+  return (
+    target.isContentEditable ||
+    target instanceof HTMLInputElement ||
+    target instanceof HTMLTextAreaElement ||
+    target instanceof HTMLSelectElement
+  );
+}
+
+document.addEventListener("keydown", (event: KeyboardEvent): void => {
+  if (
+    state.status !== "playing" ||
+    isTextEntryTarget(event.target) ||
+    event.altKey ||
+    event.ctrlKey ||
+    event.metaKey ||
+    event.repeat
+  ) {
+    return;
+  }
+
+  if (event.key === "Enter" || event.key === " ") return;
+
+  const key = event.key.toLowerCase();
+  if (key === "p" || key === "escape") {
+    event.preventDefault();
+    setState({ ...state, status: "paused" });
+    return;
+  }
+
+  if (/^[1-8]$/.test(key)) {
+    const ingredient = INGREDIENTS[Number(key) - 1];
+    if (ingredient) {
+      document.getElementById(`shelf-${ingredient.id}`)?.click();
+    }
+    return;
+  }
+
+  if (key === "b") {
+    document.getElementById("btn-brew")?.click();
+  } else if (key === "o") {
+    document.getElementById("btn-pour-out")?.click();
+  }
+});
 
 document.addEventListener("visibilitychange", (): void => {
   // Auto-pause when tab becomes hidden

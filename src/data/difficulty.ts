@@ -33,7 +33,7 @@ export const DIFFICULTY_SETTINGS: Record<Difficulty, IDifficultySettings> = {
     scorePerBrew: 200,
     timeBonus: 10,
     maxTime: 150,
-    reactionCount: 0,
+    reactionCount: 2,
   },
   hard: {
     ingredientsCount: 8,
@@ -44,7 +44,7 @@ export const DIFFICULTY_SETTINGS: Record<Difficulty, IDifficultySettings> = {
     scorePerBrew: 300,
     timeBonus: 5,
     maxTime: 150,
-    reactionCount: 0,
+    reactionCount: 3,
   },
 };
 

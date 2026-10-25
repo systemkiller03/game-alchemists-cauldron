@@ -1,7 +1,7 @@
 import { IGameState } from "../types/types";
-import { brewPotion, startNewGame } from "../logic/cauldron";
+import { brewPotion, pourOut, startNewGame } from "../logic/cauldron";
 import { clearSave, loadGame } from "../storage/gameSave";
-import { showFeedback } from "./feedback";
+import { playBrewAnimation, showFeedback } from "./feedback";
 import { openLeaderboardModal } from "./leaderboard";
 import { openDifficultyModal, openHelpModal } from "./startScreenDialogs";
 
@@ -28,6 +28,11 @@ export function renderControls(
   brewBtn.id = "btn-brew";
   brewBtn.className = "btn-primary btn-brew";
   brewBtn.textContent = "Brew";
+
+  const pourOutBtn = document.createElement("button");
+  pourOutBtn.id = "btn-pour-out";
+  pourOutBtn.className = "btn-primary btn-pour-out";
+  pourOutBtn.textContent = "Pour Out (-10s)";
 
   // Menu state controls
   if (state.status === "menu") {
@@ -96,21 +101,33 @@ export function renderControls(
   startBtn.style.display = "none";
   brewBtn.style.display = "";
   brewBtn.disabled = state.cauldronIngredients.length === 0;
+  pourOutBtn.disabled = state.cauldronIngredients.length === 0;
 
   brewBtn.onclick = (): void => {
     if (state.cauldronIngredients.length === 0) return;
     const { nextState, checkResult } = brewPotion(state);
     if (checkResult.success) {
+      playBrewAnimation(true);
       showFeedback(
         `✨ Potion brewed successfully! +${nextState.score - state.score} Score`,
         "success",
       );
     } else {
+      playBrewAnimation(false);
       showFeedback("💥 Brew failed! Ingredients lost, -1 Life", "failure");
     }
     setState(nextState);
   };
 
+  pourOutBtn.onclick = (): void => {
+    const nextState = pourOut(state);
+    if (nextState !== state) {
+      showFeedback("Mixture poured out. -10 seconds", "failure");
+      setState(nextState);
+    }
+  };
+
   container.appendChild(startBtn);
   container.appendChild(brewBtn);
+  container.appendChild(pourOutBtn);
 }
