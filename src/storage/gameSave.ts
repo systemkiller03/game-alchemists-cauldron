@@ -30,7 +30,9 @@ function isValidSave(value: unknown): value is {
   const difficulty = value.difficulty;
   const settings = DIFFICULTY_SETTINGS[difficulty];
   const activeIngredientIds = new Set(
-    INGREDIENTS.slice(0, settings.ingredientsCount).map((ingredient) => ingredient.id),
+    INGREDIENTS.slice(0, settings.ingredientsCount).map(
+      (ingredient) => ingredient.id,
+    ),
   );
 
   if (
@@ -55,8 +57,7 @@ function isValidSave(value: unknown): value is {
   const activeRecipe = value.activeRecipe as Record<string, unknown>;
   const recipe = RECIPES.find(
     (candidate) =>
-      candidate.id === activeRecipe.id &&
-      candidate.difficulty === difficulty,
+      candidate.id === activeRecipe.id && candidate.difficulty === difficulty,
   );
 
   if (!recipe) {
@@ -74,9 +75,15 @@ function isValidSave(value: unknown): value is {
     return false;
   }
 
-  for (const [id, stock] of Object.entries(value.shelfStock as Record<string, unknown>)) {
+  for (const [id, stock] of Object.entries(
+    value.shelfStock as Record<string, unknown>,
+  )) {
     if (!activeIngredientIds.has(id)) return false;
-    if (!Number.isInteger(stock) || (stock as number) < 0 || (stock as number) > 15) {
+    if (
+      !Number.isInteger(stock) ||
+      (stock as number) < 0 ||
+      (stock as number) > 15
+    ) {
       return false;
     }
   }
