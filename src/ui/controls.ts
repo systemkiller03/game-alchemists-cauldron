@@ -1,7 +1,9 @@
 import { IGameState } from "../types/types";
 import { brewPotion, startNewGame } from "../logic/cauldron";
+import { clearSave, loadGame } from "../storage/gameSave";
 import { showFeedback } from "./feedback";
 import { openLeaderboardModal } from "./leaderboard";
+import { openDifficultyModal, openHelpModal } from "./startScreenDialogs";
 
 export function renderControls(
   state: IGameState,
@@ -11,6 +13,7 @@ export function renderControls(
   if (!container) return;
 
   container.innerHTML = "";
+  container.classList.toggle("controls--menu", state.status === "menu");
 
   if (state.status === "paused") {
     return;
@@ -31,11 +34,25 @@ export function renderControls(
     const menuGroup = document.createElement("div");
     menuGroup.className = "menu-controls-group";
 
-    startBtn.style.display = "";
     brewBtn.style.display = "none";
     brewBtn.disabled = true;
 
+    const continueSavedGame = loadGame();
+    const continueBtn = document.createElement("button");
+    continueBtn.id = "btn-continue-game";
+    continueBtn.className = "btn-secondary btn-continue";
+    continueBtn.textContent = "Continue Game";
+    continueBtn.hidden = !continueSavedGame;
+    continueBtn.onclick = (): void => {
+      if (!continueSavedGame) return;
+      setState({
+        ...continueSavedGame,
+        status: "paused",
+      });
+    };
+
     startBtn.onclick = (): void => {
+      clearSave();
       const next = startNewGame(state);
       setState(next);
     };
@@ -45,11 +62,29 @@ export function renderControls(
     leaderboardBtn.className = "btn-secondary btn-leaderboard";
     leaderboardBtn.textContent = "🏆 Leaderboard";
     leaderboardBtn.onclick = (): void => {
-      openLeaderboardModal();
+      openLeaderboardModal(state.difficulty);
     };
 
-    menuGroup.append(startBtn, leaderboardBtn);
+    const helpBtn = document.createElement("button");
+    helpBtn.id = "btn-help";
+    helpBtn.className = "btn-secondary";
+    helpBtn.textContent = "Help";
+    helpBtn.onclick = openHelpModal;
+
+    const settingsBtn = document.createElement("button");
+    settingsBtn.id = "btn-settings";
+    settingsBtn.className = "btn-secondary";
+    settingsBtn.textContent = "Settings";
+    settingsBtn.onclick = (): void => {
+      openDifficultyModal(state, setState);
+    };
+
+    const startGroup = document.createElement("div");
+    startGroup.className = "start-controls";
+    startGroup.append(continueBtn, startBtn);
+    menuGroup.append(helpBtn, settingsBtn, leaderboardBtn);
     container.appendChild(menuGroup);
+    container.appendChild(startGroup);
     container.appendChild(brewBtn);
     return;
   }
@@ -66,7 +101,10 @@ export function renderControls(
     if (state.cauldronIngredients.length === 0) return;
     const { nextState, checkResult } = brewPotion(state);
     if (checkResult.success) {
-      showFeedback("✨ Potion brewed successfully! +200 Score", "success");
+      showFeedback(
+        `✨ Potion brewed successfully! +${nextState.score - state.score} Score`,
+        "success",
+      );
     } else {
       showFeedback("💥 Brew failed! Ingredients lost, -1 Life", "failure");
     }

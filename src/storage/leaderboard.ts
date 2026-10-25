@@ -1,5 +1,5 @@
-import { ILeaderboardEntry } from "../types/types";
-
+import { DEFAULT_DIFFICULTY } from "../data/difficulty";
+import { Difficulty, ILeaderboardEntry } from "../types/types";
 export type { ILeaderboardEntry };
 
 export const LEADERBOARD_STORAGE_KEY = "alchemists_cauldron_leaderboard";
@@ -8,6 +8,10 @@ export const MIN_NAME_LENGTH = 2;
 export const MAX_NAME_LENGTH = 15;
 
 const VALID_CHAR_REGEX = /^[\p{L}0-9 _-]+$/u;
+
+function getStorageKey(difficulty: Difficulty): string {
+  return `${LEADERBOARD_STORAGE_KEY}_${difficulty}`;
+}
 
 export function validatePlayerName(name: string): boolean {
   if (typeof name !== "string") return false;
@@ -68,9 +72,11 @@ export function sortLeaderboard(
   });
 }
 
-export function getLeaderboard(): ILeaderboardEntry[] {
+export function getLeaderboard(
+  difficulty: Difficulty = DEFAULT_DIFFICULTY,
+): ILeaderboardEntry[] {
   try {
-    const raw = localStorage.getItem(LEADERBOARD_STORAGE_KEY);
+    const raw = localStorage.getItem(getStorageKey(difficulty));
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
@@ -84,13 +90,15 @@ export function getLeaderboard(): ILeaderboardEntry[] {
         typeof item.score === "number" &&
         !Number.isNaN(item.score) &&
         typeof item.date === "string" &&
-        typeof item.timestamp === "number"
+        typeof item.timestamp === "number" &&
+        item.difficulty === difficulty
       ) {
         validEntries.push({
           name: item.name,
           score: item.score,
           date: item.date,
           timestamp: item.timestamp,
+          difficulty,
         });
       }
     }
@@ -101,8 +109,11 @@ export function getLeaderboard(): ILeaderboardEntry[] {
   }
 }
 
-export function isScoreEligibleForTop10(score: number): boolean {
-  const entries = getLeaderboard();
+export function isScoreEligibleForTop10(
+  score: number,
+  difficulty: Difficulty = DEFAULT_DIFFICULTY,
+): boolean {
+  const entries = getLeaderboard(difficulty);
   if (entries.length < MAX_LEADERBOARD_ENTRIES) {
     return true;
   }
@@ -114,32 +125,36 @@ export function addLeaderboardEntry(
   name: string,
   score: number,
   timestamp: number = Date.now(),
+  difficulty: Difficulty = DEFAULT_DIFFICULTY,
 ): ILeaderboardEntry[] {
   if (!validatePlayerName(name)) {
-    return getLeaderboard();
+    return getLeaderboard(difficulty);
   }
 
   try {
-    const entries = getLeaderboard();
+    const entries = getLeaderboard(difficulty);
     const newEntry: ILeaderboardEntry = {
       name: name.trim(),
       score,
       date: formatDate(timestamp),
       timestamp,
+      difficulty,
     };
 
     entries.push(newEntry);
     const sorted = sortLeaderboard(entries).slice(0, MAX_LEADERBOARD_ENTRIES);
-    localStorage.setItem(LEADERBOARD_STORAGE_KEY, JSON.stringify(sorted));
+    localStorage.setItem(getStorageKey(difficulty), JSON.stringify(sorted));
     return sorted;
   } catch {
-    return getLeaderboard();
+    return getLeaderboard(difficulty);
   }
 }
 
-export function clearLeaderboard(): void {
+export function clearLeaderboard(
+  difficulty: Difficulty = DEFAULT_DIFFICULTY,
+): void {
   try {
-    localStorage.removeItem(LEADERBOARD_STORAGE_KEY);
+    localStorage.removeItem(getStorageKey(difficulty));
   } catch {
     // Gracefully ignore localStorage errors
   }

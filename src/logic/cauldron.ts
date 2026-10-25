@@ -121,21 +121,22 @@ export function brewPotion(state: IGameState): IBrewResult {
 
 export function startNewGame(
   state: IGameState,
-  difficulty: Difficulty = DEFAULT_DIFFICULTY,
+  difficulty?: Difficulty,
 ): IGameState {
-  const settings = DIFFICULTY_SETTINGS[difficulty];
+  const diff = difficulty ?? state.difficulty ?? DEFAULT_DIFFICULTY;
+  const settings = DIFFICULTY_SETTINGS[diff];
   const activeIngredients = INGREDIENTS.slice(0, settings.ingredientsCount);
 
   return {
     ...state,
     status: "playing",
-    difficulty,
+    difficulty: diff,
     score: 0,
     timeLeft: settings.startingTime,
     lives: settings.lives,
     cauldronIngredients: [],
     shelfStock: createStock(activeIngredients),
-    activeRecipe: getRandomRecipe(difficulty),
+    activeRecipe: getRandomRecipe(diff),
     gameOverReason: null,
   };
 }
