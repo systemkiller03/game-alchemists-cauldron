@@ -22,7 +22,11 @@ export function renderAppShell(): void {
   const shelf = createElement("section", "shelf", "shelf");
   shelf.setAttribute("aria-label", "Ingredient Shelf");
 
-  const station = createElement("section", "brewing-station");
+  const station = createElement(
+    "section",
+    "brewing-station",
+    "brewing-station",
+  );
   station.setAttribute("aria-label", "Brewing station");
   const cauldronArea = createElement("div", "cauldron-area");
   const cauldronImage = createElement("img", "cauldron-art");

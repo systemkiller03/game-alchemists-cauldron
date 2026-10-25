@@ -3,7 +3,7 @@ import { INGREDIENTS } from "../data/ingredients";
 import { addIngredient } from "../logic/cauldron";
 import { DIFFICULTY_SETTINGS, DEFAULT_DIFFICULTY } from "../data/difficulty";
 import { REACTIONS } from "../data/reactions";
-import { showFeedback } from "./feedback";
+import { playBrewAnimation, showFeedback } from "./feedback";
 
 const formatTooltipValue = (value: number): string => {
   if (value > 0) return `+${value}`;
@@ -35,6 +35,9 @@ export function renderShelf(
       (candidate) => candidate.id === nextState.lastReactionId,
     );
     if (reaction) {
+      if (reaction.clearCauldron) {
+        playBrewAnimation(false);
+      }
       const isHarmful =
         (reaction.timePenalty ?? 0) > 0 || (reaction.lifePenalty ?? 0) > 0;
       showFeedback(`${reaction.name}!`, isHarmful ? "failure" : "success");

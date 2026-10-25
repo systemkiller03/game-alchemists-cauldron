@@ -1,7 +1,7 @@
 import { IGameState } from "../types/types";
 import { brewPotion, pourOut, startNewGame } from "../logic/cauldron";
 import { clearSave, loadGame } from "../storage/gameSave";
-import { showFeedback } from "./feedback";
+import { playBrewAnimation, showFeedback } from "./feedback";
 import { openLeaderboardModal } from "./leaderboard";
 import { openDifficultyModal, openHelpModal } from "./startScreenDialogs";
 
@@ -107,11 +107,13 @@ export function renderControls(
     if (state.cauldronIngredients.length === 0) return;
     const { nextState, checkResult } = brewPotion(state);
     if (checkResult.success) {
+      playBrewAnimation(true);
       showFeedback(
         `✨ Potion brewed successfully! +${nextState.score - state.score} Score`,
         "success",
       );
     } else {
+      playBrewAnimation(false);
       showFeedback("💥 Brew failed! Ingredients lost, -1 Life", "failure");
     }
     setState(nextState);
