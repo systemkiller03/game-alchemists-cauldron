@@ -312,6 +312,24 @@ h1 {
   max-width: 480px;
   min-height: 58px;
   flex-wrap: wrap;
+  border: 2px solid transparent;
+  border-radius: 18px;
+  padding: 8px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.cauldron.is-drop-target {
+  border-color: #a855f7;
+  background: rgba(168, 85, 247, 0.08);
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.3);
+}
+
+.shelf button.dragging {
+  opacity: 0.7;
+  transform: scale(0.98);
 }
 
 .cauldron-slot {
