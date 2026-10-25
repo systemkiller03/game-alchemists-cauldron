@@ -33,6 +33,7 @@ export function renderHeader(
   const timeBarFillEl = document.getElementById("timer-bar-fill");
   const livesValEl = document.getElementById("stat-lives-val");
   const statTimeCard = document.getElementById("stat-time");
+  const livesCardEl = document.getElementById("stat-lives-card");
   const pauseBtn = document.getElementById("btn-pause-toggle");
 
   if (
@@ -48,9 +49,14 @@ export function renderHeader(
     timeBarFillEl.style.width = `${timePercent}%`;
     timeBarFillEl.className = `timer-bar__fill ${isWarning ? "timer-bar__fill--warning" : ""}`;
     statTimeCard.className = `stat-card stat-time ${isWarning ? "stat-time--warning" : ""}`;
+    if (livesCardEl) {
+      livesCardEl.hidden = isMenu;
+      livesCardEl.style.display = isMenu ? "none" : "";
+    }
     livesValEl.innerHTML = !isMenu ? hearts || "None" : "—";
     if (pauseBtn instanceof HTMLButtonElement) {
       pauseBtn.hidden = state.status !== "playing";
+      pauseBtn.style.display = state.status === "playing" ? "" : "none";
       pauseBtn.onclick = (): void => {
         if (state.status === "playing") {
           setState({ ...state, status: "paused" });
@@ -85,8 +91,15 @@ export function renderHeader(
     </div>
   `;
 
+  const livesCard = document.getElementById("stat-lives-card");
+  if (livesCard) {
+    livesCard.hidden = isMenu;
+    livesCard.style.display = isMenu ? "none" : "";
+  }
+
   const pauseToggleBtn = document.getElementById("btn-pause-toggle");
   if (pauseToggleBtn instanceof HTMLButtonElement) {
+    pauseToggleBtn.style.display = state.status === "playing" ? "" : "none";
     pauseToggleBtn.onclick = (): void => {
       if (state.status === "playing") {
         setState({ ...state, status: "paused" });

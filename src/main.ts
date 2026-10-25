@@ -12,6 +12,7 @@ import { renderPauseDialog } from "./ui/pauseDialog";
 import { renderGameOver } from "./ui/gameOver";
 import { GameTimer } from "./logic/timer";
 import { startNewGame } from "./logic/cauldron";
+import { clearSave, saveGame } from "./storage/gameSave";
 
 let state: IGameState = initialGameState;
 
@@ -23,7 +24,6 @@ const gameTimer = new GameTimer({
     if (timeLeft !== state.timeLeft) {
       state = { ...state, timeLeft };
       renderHeader(state, setState);
-
     }
   },
   onTimeUp: (): void => {
@@ -53,8 +53,13 @@ function setState(newState: IGameState): void {
     } else if (newState.timeLeft !== prevTimeLeft) {
       gameTimer.setTime(newState.timeLeft);
     }
+    saveGame(newState);
+  } else if (newState.status === "paused") {
+    gameTimer.stop();
+    saveGame(newState);
   } else {
     gameTimer.stop();
+    clearSave();
   }
 
   render();

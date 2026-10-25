@@ -25,6 +25,24 @@ Ingredients are limited. Each one starts with a random stock from 2 to 15, and e
 | Lives                       |   5   |   3    |   3   |
 | Score per brew              |  100  |  200   |  300  |
 | Time bonus per brew         | +15 s | +10 s  | +5 s  |
+| Reactions                   |   0   |   0    |   0   |
+
+Difficulty is selected from **Settings** on the start screen. Each setting
+controls the shelf stock, cauldron capacity, recipe tolerance, starting lives
+and time, points per successful brew, and time bonus. Reactions are not part of
+the Level 2 rules, so every difficulty currently has zero reactions.
+
+The recipe picker only chooses from the selected difficulty's recipes:
+
+| Easy        | Medium       | Hard           |
+| ----------- | ------------ | -------------- |
+| Moon Mist   | Acid Spark   | Phoenix Pulse  |
+| Root Bloom  | Void Ember   | Slime Crown    |
+| Frost Steam | Heavy Acid   | Void Flame     |
+| Quiet Swirl | Frost Acid   | Acid Bog       |
+| Bright Dew  | Dusty Void   | Frozen Ash     |
+| Snow Dust   | Dragon Void  | Triple Eclipse |
+|             | Rooted Night | Ember Soup     |
 
 ## Levels
 
@@ -36,8 +54,6 @@ The task is split into levels, and each finished level adds to the total score (
 | Level 1      | One full playable game with fixed (Medium) rules                                  |     228     |
 | Level 2      | Difficulty selection, save and continue                                           |     278     |
 | Level 3      | Drag and drop, tooltips, reactions, Pour Out, keyboard shortcuts, visual feedback |     393     |
-
-<!-- TODO: add which levels you actually finished -->
 
 ## Tech stack
 
