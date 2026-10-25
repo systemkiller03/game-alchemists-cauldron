@@ -2,6 +2,8 @@ import { IGameState } from "../types/types";
 import { INGREDIENTS } from "../data/ingredients";
 import { addIngredient } from "../logic/cauldron";
 import { DIFFICULTY_SETTINGS, DEFAULT_DIFFICULTY } from "../data/difficulty";
+import { REACTIONS } from "../data/reactions";
+import { showFeedback } from "./feedback";
 
 const formatTooltipValue = (value: number): string => {
   if (value > 0) return `+${value}`;
@@ -25,6 +27,20 @@ export function renderShelf(
   const settings = DIFFICULTY_SETTINGS[difficulty];
   const maxCauldronSize = settings.maxCauldronIngredients;
   const displayed = INGREDIENTS.slice(0, settings.ingredientsCount);
+  const addToCauldron = (ingredientId: string): void => {
+    const nextState = addIngredient(state, ingredientId);
+    if (nextState === state) return;
+
+    const reaction = REACTIONS.find(
+      (candidate) => candidate.id === nextState.lastReactionId,
+    );
+    if (reaction) {
+      const isHarmful =
+        (reaction.timePenalty ?? 0) > 0 || (reaction.lifePenalty ?? 0) > 0;
+      showFeedback(`${reaction.name}!`, isHarmful ? "failure" : "success");
+    }
+    setState(nextState);
+  };
 
   const cauldron = document.getElementById("cauldron");
   if (cauldron) {
@@ -32,7 +48,7 @@ export function renderShelf(
       event.preventDefault();
       if (state.status !== "playing") return;
       const ingredientId = event.dataTransfer?.getData("text/plain");
-      const stock = ingredientId ? state.shelfStock[ingredientId] ?? 0 : 0;
+      const stock = ingredientId ? (state.shelfStock[ingredientId] ?? 0) : 0;
       const canDrop =
         Boolean(ingredientId) &&
         stock > 0 &&
@@ -59,8 +75,7 @@ export function renderShelf(
       if (state.cauldronIngredients.length >= maxCauldronSize) return;
       const ingredientId = event.dataTransfer?.getData("text/plain");
       if (!ingredientId) return;
-      const nextState = addIngredient(state, ingredientId);
-      setState(nextState);
+      addToCauldron(ingredientId);
     };
   }
 
@@ -148,8 +163,7 @@ export function renderShelf(
 
     button.onclick = (): void => {
       if (state.status !== "playing") return;
-      const newState = addIngredient(state, ing.id);
-      setState(newState);
+      addToCauldron(ing.id);
     };
     button.ondragstart = (event: DragEvent): void => {
       if (!canInteract) {

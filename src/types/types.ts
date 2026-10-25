@@ -48,7 +48,6 @@ export interface ILeaderboardEntry {
 export interface IReaction {
   id: string;
   name: string;
-  difficulty: Exclude<Difficulty, "easy">;
   isActive: (ingredients: IIngredient[]) => boolean;
   apply: (values: {
     temperature: number;
@@ -59,4 +58,7 @@ export interface IReaction {
     density: number;
     magicPower: number;
   };
+  timePenalty?: number;
+  lifePenalty?: number;
+  clearCauldron?: boolean;
 }

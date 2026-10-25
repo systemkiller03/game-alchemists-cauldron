@@ -1,6 +1,9 @@
 import { Difficulty, GameStatus, IGameState } from "../types/types";
 import { INGREDIENTS } from "../data/ingredients";
-import { calculateCauldron } from "./calculateCauldron";
+import {
+  calculateCauldronWithReactions,
+  getEnabledReactions,
+} from "./reactions";
 import { checkBrew, IBrewCheckResult } from "./brewCheck";
 import { getRandomRecipe } from "./recipeGenerator";
 import { DIFFICULTY_SETTINGS, DEFAULT_DIFFICULTY } from "../data/difficulty";
@@ -27,9 +30,43 @@ export function addIngredient(
   const ing = INGREDIENTS.find((i) => i.id === ingredientId);
   if (!ing) return state;
 
+  const ingredientsAfterAdd = [...state.cauldronIngredients, ing];
+  const newlyActiveReactions = getEnabledReactions(difficulty).filter(
+    (reaction) =>
+      !reaction.isActive(state.cauldronIngredients) &&
+      reaction.isActive(ingredientsAfterAdd),
+  );
+  const timePenalty = newlyActiveReactions.reduce(
+    (total, reaction) => total + (reaction.timePenalty ?? 0),
+    0,
+  );
+  const nextTime = Math.max(0, state.timeLeft - timePenalty);
+  const nextLives = Math.max(
+    0,
+    state.lives -
+      newlyActiveReactions.reduce(
+        (total, reaction) => total + (reaction.lifePenalty ?? 0),
+        0,
+      ),
+  );
+  const isTimeUp = nextTime <= 0;
+  const isOutOfLives = nextLives <= 0;
+  const clearCauldron = newlyActiveReactions.some(
+    (reaction) => reaction.clearCauldron,
+  );
+
   return {
     ...state,
-    cauldronIngredients: [...state.cauldronIngredients, ing],
+    status: isTimeUp || isOutOfLives ? "game-over" : state.status,
+    timeLeft: nextTime,
+    lives: nextLives,
+    gameOverReason: isTimeUp
+      ? "Time is up!"
+      : isOutOfLives
+        ? "Out of lives!"
+        : null,
+    lastReactionId: newlyActiveReactions.at(-1)?.id ?? null,
+    cauldronIngredients: clearCauldron ? [] : ingredientsAfterAdd,
     shelfStock: {
       ...state.shelfStock,
       [ingredientId]: stock - 1,
@@ -59,7 +96,10 @@ export function brewPotion(state: IGameState): IBrewResult {
     };
   }
 
-  const currentValues = calculateCauldron(state.cauldronIngredients);
+  const currentValues = calculateCauldronWithReactions(
+    state.cauldronIngredients,
+    difficulty,
+  );
   const checkResult = checkBrew(
     currentValues,
     state.activeRecipe,
@@ -137,6 +177,7 @@ export function startNewGame(
     cauldronIngredients: [],
     shelfStock: createStock(activeIngredients),
     activeRecipe: getRandomRecipe(diff),
+    lastReactionId: null,
     gameOverReason: null,
   };
 }
