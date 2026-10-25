@@ -8,6 +8,7 @@ import { renderShelf } from "./ui/shelf";
 import { renderCauldron } from "./ui/cauldron";
 import { renderBars } from "./ui/bars";
 import { renderControls } from "./ui/controls";
+import { renderPauseDialog } from "./ui/pauseDialog";
 import { renderGameOver } from "./ui/gameOver";
 import { GameTimer } from "./logic/timer";
 import { startNewGame } from "./logic/cauldron";
@@ -21,7 +22,8 @@ const gameTimer = new GameTimer({
     if (state.status !== "playing") return;
     if (timeLeft !== state.timeLeft) {
       state = { ...state, timeLeft };
-      renderHeader(state);
+      renderHeader(state, setState);
+
     }
   },
   onTimeUp: (): void => {
@@ -59,18 +61,20 @@ function setState(newState: IGameState): void {
 }
 
 function render(): void {
-  renderHeader(state);
+  renderHeader(state, setState);
   renderRecipePanel(state);
   renderShelf(state, setState);
   renderCauldron(state);
   renderControls(state, setState);
   renderBars(state);
+  renderPauseDialog(state, setState);
   renderGameOver(state, handlePlayAgain);
 }
 
 document.addEventListener("visibilitychange", (): void => {
-  if (!document.hidden && state.status === "playing" && gameTimer.running) {
-    gameTimer.tick();
+  // Auto-pause when tab becomes hidden
+  if (document.hidden && state.status === "playing" && gameTimer.running) {
+    setState({ ...state, status: "paused" });
   }
 });
 

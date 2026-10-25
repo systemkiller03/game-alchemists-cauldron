@@ -2,7 +2,10 @@ import { IGameState } from "../types/types";
 import { formatTime } from "../logic/timer";
 import { DIFFICULTY_SETTINGS, DEFAULT_DIFFICULTY } from "../data/difficulty";
 
-export function renderHeader(state: IGameState): void {
+export function renderHeader(
+  state: IGameState,
+  setState: (s: IGameState) => void,
+): void {
   const container = document.getElementById("header-stats");
   if (!container) return;
 
@@ -24,19 +27,36 @@ export function renderHeader(state: IGameState): void {
     ? `<span class="stat-value stat-lives" id="stat-lives-val">${hearts || "None"}</span>`
     : `<span class="stat-value stat-lives" id="stat-lives-val">—</span>`;
 
+  // Try to reuse existing elements if they've already been created
   const scoreValEl = document.getElementById("stat-score-val");
   const timeValEl = document.getElementById("timer-display");
   const timeBarFillEl = document.getElementById("timer-bar-fill");
   const livesValEl = document.getElementById("stat-lives-val");
   const statTimeCard = document.getElementById("stat-time");
+  const pauseBtn = document.getElementById("btn-pause-toggle");
 
-  if (scoreValEl && timeValEl && timeBarFillEl && livesValEl && statTimeCard) {
+  if (
+    scoreValEl &&
+    timeValEl &&
+    timeBarFillEl &&
+    livesValEl &&
+    statTimeCard &&
+    pauseBtn
+  ) {
     scoreValEl.textContent = String(state.score);
     timeValEl.textContent = formattedTime;
     timeBarFillEl.style.width = `${timePercent}%`;
     timeBarFillEl.className = `timer-bar__fill ${isWarning ? "timer-bar__fill--warning" : ""}`;
     statTimeCard.className = `stat-card stat-time ${isWarning ? "stat-time--warning" : ""}`;
     livesValEl.innerHTML = !isMenu ? hearts || "None" : "—";
+    if (pauseBtn instanceof HTMLButtonElement) {
+      pauseBtn.hidden = state.status !== "playing";
+      pauseBtn.onclick = (): void => {
+        if (state.status === "playing") {
+          setState({ ...state, status: "paused" });
+        }
+      };
+    }
     return;
   }
 
@@ -49,6 +69,7 @@ export function renderHeader(state: IGameState): void {
       <div class="stat-time__info">
         <span class="stat-label">Time</span>
         <span class="stat-value" id="timer-display">${formattedTime}</span>
+        <button id="btn-pause-toggle" class="btn-secondary btn-pause-toggle" ${state.status !== "playing" ? "hidden" : ""}>Pause</button>
       </div>
       <div class="timer-bar" id="timer-bar" aria-label="Remaining time">
         <div
@@ -63,4 +84,13 @@ export function renderHeader(state: IGameState): void {
       ${livesMarkup}
     </div>
   `;
+
+  const pauseToggleBtn = document.getElementById("btn-pause-toggle");
+  if (pauseToggleBtn instanceof HTMLButtonElement) {
+    pauseToggleBtn.onclick = (): void => {
+      if (state.status === "playing") {
+        setState({ ...state, status: "paused" });
+      }
+    };
+  }
 }

@@ -12,6 +12,10 @@ export function renderControls(
 
   container.innerHTML = "";
 
+  if (state.status === "paused") {
+    return;
+  }
+
   const startBtn = document.createElement("button");
   startBtn.id = "btn-start";
   startBtn.className = "btn-primary btn-start";
@@ -22,6 +26,7 @@ export function renderControls(
   brewBtn.className = "btn-primary btn-brew";
   brewBtn.textContent = "Brew";
 
+  // Menu state controls
   if (state.status === "menu") {
     const menuGroup = document.createElement("div");
     menuGroup.className = "menu-controls-group";
@@ -50,14 +55,9 @@ export function renderControls(
   }
 
   if (state.status === "game-over") {
-    // Game over screen is displayed separately via renderGameOver modal
-    startBtn.style.display = "none";
-    brewBtn.style.display = "none";
-    brewBtn.disabled = true;
     return;
   }
 
-  // Active playing state
   startBtn.style.display = "none";
   brewBtn.style.display = "";
   brewBtn.disabled = state.cauldronIngredients.length === 0;
