@@ -3,6 +3,12 @@ import { INGREDIENTS } from "../data/ingredients";
 import { addIngredient } from "../logic/cauldron";
 import { DIFFICULTY_SETTINGS, DEFAULT_DIFFICULTY } from "../data/difficulty";
 
+const formatTooltipValue = (value: number): string => {
+  if (value > 0) return `+${value}`;
+  if (value < 0) return `−${Math.abs(value)}`;
+  return "0";
+};
+
 export function renderShelf(
   state: IGameState,
   setState: (s: IGameState) => void,
@@ -10,6 +16,9 @@ export function renderShelf(
   const container = document.getElementById("shelf");
   if (!container) return;
   container.innerHTML = "";
+  document.querySelectorAll(".ingredient-tooltip").forEach((tooltip) => {
+    tooltip.remove();
+  });
   if (state.status === "menu") return;
 
   const difficulty = state.difficulty ?? DEFAULT_DIFFICULTY;
@@ -67,16 +76,76 @@ export function renderShelf(
     button.draggable = canInteract;
     button.disabled = !canInteract;
     if (stock <= 0) button.classList.add("out-of-stock");
+
     button.innerHTML = `
       <img src="${ing.icon}" alt="${ing.name}" class="icon"/>
       <span class="name">${ing.name}</span>
-      <span class="stats" aria-label="Temperature ${ing.temperature}, density ${ing.density}, magic power ${ing.magicPower}">
-        <span class="stat-temperature" title="Temperature">T:${ing.temperature}</span>
-        <span class="stat-density" title="Density">D:${ing.density}</span>
-        <span class="stat-magic" title="Magic Power">M:${ing.magicPower}</span>
-      </span>
-      <span class="badge">${stock}</span>
     `;
+
+    const tooltip = document.createElement("div");
+    tooltip.className = "ingredient-tooltip";
+    tooltip.setAttribute("role", "tooltip");
+    tooltip.innerHTML = `
+      <div class="tooltip-row">
+        <span class="tooltip-label">Temperature</span>
+        <span class="tooltip-value">${formatTooltipValue(ing.temperature)}</span>
+      </div>
+      <div class="tooltip-row">
+        <span class="tooltip-label">Density</span>
+        <span class="tooltip-value">${formatTooltipValue(ing.density)}</span>
+      </div>
+      <div class="tooltip-row">
+        <span class="tooltip-label">Magic Power</span>
+        <span class="tooltip-value">${formatTooltipValue(ing.magicPower)}</span>
+      </div>
+    `;
+    document.body.appendChild(tooltip);
+
+    const positionTooltip = (): void => {
+      tooltip.classList.remove("tooltip--left", "tooltip--up");
+      if (state.status !== "playing" || button.disabled) {
+        tooltip.classList.remove("is-visible");
+        return;
+      }
+
+      const rect = button.getBoundingClientRect();
+      const tooltipWidth = tooltip.offsetWidth;
+      const tooltipHeight = tooltip.offsetHeight;
+      const padding = 12;
+
+      let left = rect.left + rect.width / 2;
+      let top = rect.bottom + 12;
+      let alignLeft = false;
+      let alignUp = false;
+
+      if (left + tooltipWidth / 2 > window.innerWidth - padding) {
+        left = rect.right;
+        alignLeft = true;
+        tooltip.classList.add("tooltip--left");
+      }
+
+      if (top + tooltipHeight > window.innerHeight - padding) {
+        top = rect.top - 8;
+        alignUp = true;
+        tooltip.classList.add("tooltip--up");
+      }
+
+      tooltip.style.left = `${Math.min(window.innerWidth - padding, Math.max(padding, left))}px`;
+      tooltip.style.top = `${Math.min(window.innerHeight - padding, Math.max(padding, top))}px`;
+      tooltip.style.transform = `translate(${alignLeft ? "-100%" : "-50%"}, ${alignUp ? "-100%" : "0"})`;
+
+      tooltip.classList.add("is-visible");
+    };
+
+    const hideTooltip = (): void => {
+      tooltip.classList.remove("is-visible", "tooltip--left", "tooltip--up");
+    };
+
+    button.addEventListener("pointerenter", positionTooltip);
+    button.addEventListener("pointerleave", hideTooltip);
+    button.addEventListener("focus", positionTooltip);
+    button.addEventListener("blur", hideTooltip);
+
     button.onclick = (): void => {
       if (state.status !== "playing") return;
       const newState = addIngredient(state, ing.id);
