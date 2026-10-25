@@ -10,6 +10,7 @@ export function renderShelf(
   const container = document.getElementById("shelf");
   if (!container) return;
   container.innerHTML = "";
+  if (state.status === "menu") return;
 
   const difficulty = state.difficulty ?? DEFAULT_DIFFICULTY;
   const settings = DIFFICULTY_SETTINGS[difficulty];

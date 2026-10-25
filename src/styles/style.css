@@ -1520,6 +1520,69 @@ h1 {
   flex-wrap: wrap;
 }
 
+.controls.controls--menu {
+  flex-direction: column;
+  gap: 12px;
+}
+
+.start-controls {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-start {
+  min-width: min(240px, 80vw);
+  min-height: 54px;
+  font-size: 1.15rem;
+}
+
+.start-screen-backdrop {
+  z-index: 1300;
+}
+
+.start-screen-card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: min(100%, 560px);
+  max-height: min(90vh, 760px);
+  overflow-y: auto;
+}
+
+.help-rules {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-left: 24px;
+  color: #e2e8f0;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.difficulty-choices {
+  display: grid;
+  gap: 10px;
+}
+
+.difficulty-choice {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  width: 100%;
+  text-align: left;
+}
+
+.difficulty-choice span {
+  color: #cbd5e1;
+  font-size: 0.85rem;
+}
+
+.difficulty-choice.is-selected {
+  border-color: #a9eb4d;
+  box-shadow: 0 0 0 2px rgba(169, 235, 77, 0.25);
+}
+
 .game-over-actions {
   display: flex;
   gap: 12px;
@@ -1588,7 +1651,9 @@ h1 {
   border: 1px solid #745a32;
   border-radius: 12px;
   background: linear-gradient(180deg, #191712, #0d0e0b);
-  box-shadow: 0 16px 40px #000, 0 0 24px rgba(169, 235, 77, 0.18);
+  box-shadow:
+    0 16px 40px #000,
+    0 0 24px rgba(169, 235, 77, 0.18);
   text-align: center;
 }
 

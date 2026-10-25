@@ -3,6 +3,8 @@ import {
   getLeaderboard,
   ILeaderboardEntry,
 } from "../storage/leaderboard";
+import { DEFAULT_DIFFICULTY } from "../data/difficulty";
+import { Difficulty } from "../types/types";
 
 function escapeHtml(str: string): string {
   const div = document.createElement("div");
@@ -14,7 +16,7 @@ function renderTableRows(entries: ILeaderboardEntry[]): string {
   if (entries.length === 0) {
     return `
       <tr>
-        <td colspan="4" class="leaderboard-empty-cell">
+        <td colspan="5" class="leaderboard-empty-cell">
           No scores recorded yet. Brew potions and claim your rank!
         </td>
       </tr>
@@ -29,6 +31,7 @@ function renderTableRows(entries: ILeaderboardEntry[]): string {
         <td class="col-name">${escapeHtml(entry.name)}</td>
         <td class="col-score">${entry.score}</td>
         <td class="col-date">${escapeHtml(entry.date)}</td>
+        <td class="col-difficulty">${entry.difficulty[0].toUpperCase()}${entry.difficulty.slice(1)}</td>
       </tr>
     `,
     )
@@ -100,7 +103,9 @@ export function openClearConfirmationDialog(onConfirm: () => void): void {
   cancelBtn?.focus();
 }
 
-export function openLeaderboardModal(): void {
+export function openLeaderboardModal(
+  difficulty: Difficulty = DEFAULT_DIFFICULTY,
+): void {
   const existingModal = document.getElementById("leaderboard-modal");
   if (existingModal) {
     existingModal.remove();
@@ -113,7 +118,7 @@ export function openLeaderboardModal(): void {
   backdrop.setAttribute("aria-modal", "true");
   backdrop.setAttribute("aria-labelledby", "leaderboard-title");
 
-  const entries = getLeaderboard();
+  const entries = getLeaderboard(difficulty);
 
   backdrop.innerHTML = `
     <div class="modal-card leaderboard-card">
@@ -129,6 +134,7 @@ export function openLeaderboardModal(): void {
               <th scope="col" class="col-name">Name</th>
               <th scope="col" class="col-score">Score</th>
               <th scope="col" class="col-date">Date</th>
+              <th scope="col" class="col-difficulty">Difficulty</th>
             </tr>
           </thead>
           <tbody id="leaderboard-tbody">
@@ -183,7 +189,7 @@ export function openLeaderboardModal(): void {
 
   clearBtn?.addEventListener("click", () => {
     openClearConfirmationDialog(() => {
-      clearLeaderboard();
+      clearLeaderboard(difficulty);
       const tbody = backdrop.querySelector("#leaderboard-tbody");
       if (tbody) {
         tbody.innerHTML = renderTableRows([]);

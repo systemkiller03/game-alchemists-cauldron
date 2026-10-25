@@ -1,4 +1,7 @@
 import { IGameState } from "../types/types";
+import { DEFAULT_DIFFICULTY } from "../data/difficulty";
+import { getRandomRecipe } from "../logic/recipeGenerator";
+import { clearSave } from "../storage/gameSave";
 
 export function renderPauseDialog(
   state: IGameState,
@@ -38,7 +41,19 @@ export function renderPauseDialog(
   const exitBtn = modal.querySelector<HTMLButtonElement>("#btn-exit-menu");
   if (exitBtn) {
     exitBtn.onclick = (): void => {
-      setState({ ...state, status: "menu" });
+      clearSave();
+      const difficulty = state.difficulty ?? DEFAULT_DIFFICULTY;
+      setState({
+        ...state,
+        status: "menu",
+        score: 0,
+        timeLeft: 0,
+        lives: 0,
+        activeRecipe: getRandomRecipe(difficulty),
+        cauldronIngredients: [],
+        shelfStock: {},
+        gameOverReason: null,
+      });
     };
   }
 

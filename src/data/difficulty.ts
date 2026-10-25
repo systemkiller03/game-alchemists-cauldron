@@ -9,6 +9,7 @@ export interface IDifficultySettings {
   readonly scorePerBrew: number;
   readonly timeBonus: number;
   readonly maxTime: number;
+  readonly reactionCount: number;
 }
 
 export const DIFFICULTY_SETTINGS: Record<Difficulty, IDifficultySettings> = {
@@ -21,6 +22,7 @@ export const DIFFICULTY_SETTINGS: Record<Difficulty, IDifficultySettings> = {
     scorePerBrew: 100,
     timeBonus: 15,
     maxTime: 180,
+    reactionCount: 0,
   },
   medium: {
     ingredientsCount: 6,
@@ -31,6 +33,7 @@ export const DIFFICULTY_SETTINGS: Record<Difficulty, IDifficultySettings> = {
     scorePerBrew: 200,
     timeBonus: 10,
     maxTime: 150,
+    reactionCount: 0,
   },
   hard: {
     ingredientsCount: 8,
@@ -41,6 +44,7 @@ export const DIFFICULTY_SETTINGS: Record<Difficulty, IDifficultySettings> = {
     scorePerBrew: 300,
     timeBonus: 5,
     maxTime: 150,
+    reactionCount: 0,
   },
 };
 

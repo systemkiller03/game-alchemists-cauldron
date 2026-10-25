@@ -56,7 +56,7 @@ export function renderGameOver(
 
     const leaderboardBtn = modal.querySelector("#btn-leaderboard-gameover");
     leaderboardBtn?.addEventListener("click", () => {
-      openLeaderboardModal();
+      openLeaderboardModal(state.difficulty);
     });
   }
 
@@ -77,7 +77,8 @@ export function renderGameOver(
 
     const top10Container = document.getElementById("game-over-top10-container");
     if (top10Container) {
-      const isEligible = isScoreEligibleForTop10(state.score);
+      const difficulty = state.difficulty ?? "medium";
+      const isEligible = isScoreEligibleForTop10(state.score, difficulty);
 
       if (isEligible && !isScoreSaved) {
         top10Container.innerHTML = `
@@ -121,7 +122,7 @@ export function renderGameOver(
             return;
           }
 
-          addLeaderboardEntry(enteredName, state.score);
+          addLeaderboardEntry(enteredName, state.score, Date.now(), difficulty);
           isScoreSaved = true;
 
           top10Container.innerHTML = `

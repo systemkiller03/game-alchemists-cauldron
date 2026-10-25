@@ -42,6 +42,7 @@ export interface ILeaderboardEntry {
   score: number;
   date: string; // DD.MM.YYYY HH:MM
   timestamp: number;
+  difficulty: Difficulty;
 }
 
 export interface IReaction {

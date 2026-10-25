@@ -1,20 +1,14 @@
-import { IGameState, IIngredient } from "../types/types";
+import { IGameState } from "../types/types";
 import { getRandomRecipe } from "../logic/recipeGenerator";
-import { DEFAULT_DIFFICULTY, DIFFICULTY_SETTINGS } from "../data/difficulty";
-import { createStock } from "../logic/stock";
-import { INGREDIENTS } from "../data/ingredients";
-
-const defaultSettings = DIFFICULTY_SETTINGS[DEFAULT_DIFFICULTY];
+import { DEFAULT_DIFFICULTY } from "../data/difficulty";
 
 export const initialGameState: IGameState = {
   status: "menu",
   score: 0,
-  timeLeft: defaultSettings.startingTime,
-  lives: defaultSettings.lives,
+  timeLeft: 0,
+  lives: 0,
   difficulty: DEFAULT_DIFFICULTY,
   activeRecipe: getRandomRecipe(DEFAULT_DIFFICULTY),
-  cauldronIngredients: [] as IIngredient[],
-  shelfStock: createStock(
-    INGREDIENTS.slice(0, defaultSettings.ingredientsCount),
-  ),
+  cauldronIngredients: [],
+  shelfStock: {},
 };
