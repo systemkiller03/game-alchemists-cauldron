@@ -46,6 +46,7 @@ export function openHelpModal(): void {
       <li>Choose a difficulty in Settings, then start a game.</li>
       <li>Add ingredients to match the recipe's temperature, density and magic power.</li>
       <li>Press Brew. Successful brews earn points and time; failed brews cost a life.</li>
+      <li>During play, press 1–8 to add shelf ingredients, B to brew, O to pour out, or P/Escape to pause. Resume with the Resume button.</li>
       <li>The game ends when time or lives run out, or you run out of ingredients.</li>
     </ol>`,
   );
